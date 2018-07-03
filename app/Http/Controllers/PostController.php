@@ -8,6 +8,11 @@ use App\Post;
 class PostController extends Controller {
     //列表页面
     public function index() {
+        $app = app();
+        $log = $app->make('log');
+        $log->info('post_index', ['this is log']);
+
+
         $posts = Post::orderBy('created_at', 'desc')->paginate(10);
         //dd($posts);
         return view("post/index", compact('posts'));
@@ -49,20 +54,29 @@ class PostController extends Controller {
     }
 
     //编辑页面
-    public function edit() {
-        return view("post/edit", array());
-
+    public function edit(Post $post) {
+        return view("post/edit", compact('post'));
     }
 
     //编辑逻辑
-    public function update() {
-        return;
-
+    public function update(Post $post) {
+        //验证
+        $this->validate(request(),[
+            'title' => 'required|string|max:100|min:5',
+            'content' => 'required|string|min:10',
+        ]);
+        //逻辑
+        $post->title = request('title');
+        $post->content = request('content');
+        $post->save();
+        //渲染
+        return redirect("/posts/{$post->id}");
     }
 
     //删除逻辑
-    public function delete() {
-        return;
+    public function delete(Post $post) {
+        $post->delete();
+        return redirect('/posts');
 
     }
 
@@ -73,7 +87,7 @@ class PostController extends Controller {
         //dd(request()->all());
         $path = $request->file('vvawangEditorH5File')->storePublicly(md5(time()));
 
-        $vva_class = (object)['errno'=>0, 'data'=>[asset('storage/' . $path)]];
+        $vva_class = (object)['errno' => 0, 'data' => [asset('storage/' . $path)]];
         return json_encode($vva_class);
     }
 }

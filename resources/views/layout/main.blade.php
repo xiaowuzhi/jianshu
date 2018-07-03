@@ -56,12 +56,16 @@
 <script type="text/javascript" src="/js/wangEditor.min.js"></script>
 <style>
 
-    #div1{
-        font-size: 14px;
-    }
+    /*#div1{*/
+        /*font-size: 14px;*/
+    /*}*/
 
-    #div1 .w-e-toolbar .w-e-menu{
-        padding: 2px 4px;
+    /*#div1 .w-e-toolbar .w-e-menu{*/
+        /*padding: 2px 4px;*/
+    /*}*/
+
+    #div1 .w-e-toolbar {
+         flex-wrap: wrap;
     }
 </style>
 <script src="/js/ylaravel.js"></script>

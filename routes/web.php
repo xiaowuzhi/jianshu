@@ -19,6 +19,7 @@ Route::group([], function(){
     Route::get('/posts/search', '\App\Http\Controllers\PostController@search');
     Route::get('/posts/{post}', '\App\Http\Controllers\PostController@show');
     Route::get('/posts/{post}/edit', '\App\Http\Controllers\PostController@edit');
+    Route::get('/posts/{post}/delete', '\App\Http\Controllers\PostController@delete');
     Route::put('/posts/{post}', '\App\Http\Controllers\PostController@update');
     Route::post('/posts/img/upload', '\App\Http\Controllers\PostController@imageUpload');
     Route::post('/posts/comment', '\App\Http\Controllers\PostController@comment');
