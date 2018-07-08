@@ -1,0 +1,4 @@
+
+init 1
+
+m f init4
