@@ -11,7 +11,7 @@ class LoginController extends Controller {
         return view('login.index');
     }
 
-    //注册行为
+    //登录行为
     public function login() {
         //验证
 //        $this->validate(request(), [
@@ -30,7 +30,7 @@ class LoginController extends Controller {
         //exit();
         //print_r($vva);
         if ($vva->fails()) {
-            return redirect('/Login')
+            return redirect('/login')
                 ->withErrors($vva)
                 ->withInput();
         }
@@ -47,6 +47,8 @@ class LoginController extends Controller {
 
     //登出行为
     public function logout() {
+        \Auth::logout();
+        return redirect('/login');
 
     }
 }
