@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Comment;
 use Illuminate\Support\Facades\Validator;
+use App\Zan;
 
 //use Illuminate\Contracts\Validation\Validator;
 
@@ -15,15 +16,19 @@ class PostController extends Controller {
         $app = app();
         $log = $app->make('log');
         $log->info('post_index', ['this is log']);
-
-
-        $posts = Post::orderBy('created_at', 'desc')->paginate(10);
-        //dd($posts);
+        $posts = Post::with('comments')
+            ->withCount(["comments", 'zans'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view("post/index", compact('posts'));
     }
 
     //详情页
     public function show(Post $post) {
+        $post->load('comments');
+        $post->comments->load('user');
+        //dd($post->comments);
+        //dd($post);
         return view("post/show", compact('post'));
     }
 
@@ -73,7 +78,6 @@ class PostController extends Controller {
         ]);
         $this->authorize('update', $post);
 
-
         //逻辑
         $post->title = request('title');
         $post->content = request('content');
@@ -85,7 +89,6 @@ class PostController extends Controller {
     //删除逻辑
     public function delete(Post $post) {
         $this->authorize('delete', $post);
-
         $post->delete();
         return redirect('/posts');
 
@@ -93,11 +96,9 @@ class PostController extends Controller {
 
     //上传图片
     public function imageUpload(Request $request) {
-
         //print_r(request()->all());exit;
         //dd(request()->all());
         $path = $request->file('vvawangEditorH5File')->storePublicly(md5(time()));
-
         $vva_class = (object)['errno' => 0, 'data' => [asset('storage/' . $path)]];
         return json_encode($vva_class);
     }
@@ -117,16 +118,29 @@ class PostController extends Controller {
                 ->withInput();
         }
         //dd($post->comments());
-
         //逻辑
         $comment = new Comment();
         $comment->user_id = \Auth::id();
         $comment->content = request('content');
         $post->comments()->save($comment);
-
         //渲染
         return back();
+    }
 
+    //赞
+    public function zan(Post $post) {
+        $param = [
+            'user_id' => \Auth::id(),
+            'post_id' => $post->id,
+        ];
+        Zan::firstOrCreate($param);
+        return back();
+    }
+
+    //取消赞
+    public function unzan(Post $post) {
+        $post->zan(\Auth::id())->delete();
+        return back();
     }
 }
 

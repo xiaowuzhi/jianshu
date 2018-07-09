@@ -40,7 +40,7 @@
                     <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}} <a href="/user/<?php echo  $post->user->user_id ?? 'xxx'; ?>"><?php echo  $post->user->name ?? 'xxx'; ?></a></p>
 
                     {!! str_limit($post->content, 1000, '...') !!}
-                    <p class="blog-post-meta">赞 0 | 评论 0</p>
+                    <p class="blog-post-meta">赞 {{$post->zans_count}} | 评论 {{$post->comments_count}}</p>
                 </div>
             @endforeach
 
