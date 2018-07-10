@@ -32,6 +32,7 @@ Route::group([], function(){
     Route::get('/posts', '\App\Http\Controllers\PostController@index');
     Route::get('/posts/create', '\App\Http\Controllers\PostController@create');
     Route::post('/posts', '\App\Http\Controllers\PostController@store');
+    //文章搜索页
     Route::get('/posts/search', '\App\Http\Controllers\PostController@search');
     Route::get('/posts/{post}', '\App\Http\Controllers\PostController@show');
     Route::get('/posts/{post}/edit', '\App\Http\Controllers\PostController@edit');
@@ -42,6 +43,17 @@ Route::group([], function(){
     Route::post('/posts/comment', '\App\Http\Controllers\PostController@comment');
     Route::get('/posts/{post}/zan', '\App\Http\Controllers\PostController@zan');
     Route::get('/posts/{post}/unzan', '\App\Http\Controllers\PostController@unzan');
+
+    //个人主页
+    Route::get('/user/{user}', '\App\Http\Controllers\UserController@show');
+    Route::post('/user/{user}/fan', '\App\Http\Controllers\UserController@fan');
+    Route::post('/user/{user}/unfan', '\App\Http\Controllers\UserController@unfan');
+
+    //专题详情页
+    Route::get('/topic/{topic}', '\App\Http\Controllers\TopicController@show');
+    //投稿
+    Route::post('/topic/{topic}/submit', '\App\Http\Controllers\TopicController@submit');
+
 
 
 });

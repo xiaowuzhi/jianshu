@@ -17,7 +17,7 @@
                 @endcan
             </div>
 
-            <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}<a href="#"> <?php echo $post->user->name ?? 'xxx'; ?></a></p>
+            <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}<a href="/user/<?php echo $post->user->id ?? 0; ?>"> <?php echo $post->user->name ?? 'xxx'; ?></a></p>
 
             <p>
             <p>{!! $post->content !!}</p>
