@@ -142,6 +142,11 @@ class PostController extends Controller {
         $post->zan(\Auth::id())->delete();
         return back();
     }
+
+    //搜索结果页
+    public function search(){
+        return view('post/search');
+    }
 }
 
 
