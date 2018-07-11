@@ -6,6 +6,8 @@ namespace App;
 use App\Model;
 use Laravel\Scout\Searchable;
 use Laravel\Scout\SearchableScope;
+use Illuminate\Database\Eloquent\Builder;
+
 
 // 表 => posts
 class Post extends Model {
@@ -45,4 +47,44 @@ class Post extends Model {
         return $this->hasMany(\App\Zan::class, 'post_id', 'id');
     }
 
+    //属于某一作者的文章
+    public function scopeAuthorBy(Builder $query, $user_id){
+        return $query->where('user_id', $user_id);
+    }
+
+    public function postTopics(){
+        return $this->hasMany(\App\PostTopic::class, 'post_id', 'id');
+    }
+
+    //不属于某个专题的文章
+    public function scopeTopicNotBy(Builder $query, $topic_id){
+        return $query->doesntHave('postTopics', 'and', function($q) use($topic_id){
+            $q->where('topic_id', $topic_id);
+        });
+
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
