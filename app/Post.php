@@ -61,8 +61,18 @@ class Post extends Model {
         return $query->doesntHave('postTopics', 'and', function($q) use($topic_id){
             $q->where('topic_id', $topic_id);
         });
-
     }
+
+    //全局scope的方式
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope("avaiable", function(Builder $builder){
+            $builder->whereIn('status', [0, 1]);
+        });
+    }
+
+
 
 }
 

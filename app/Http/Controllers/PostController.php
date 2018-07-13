@@ -16,10 +16,13 @@ class PostController extends Controller {
         $app = app();
         $log = $app->make('log');
         $log->info('post_index', ['this is log']);
-        $posts = Post::with('comments')
+        $posts = Post::with(['comments', 'user'])
             ->withCount(["comments", 'zans'])
+            //$posts = Post::withCount(["comments", 'zans'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+        //$posts->load(['comments', 'user']);
+
         return view("post/index", compact('posts'));
     }
 
@@ -144,7 +147,7 @@ class PostController extends Controller {
     }
 
     //搜索结果页
-    public function search(){
+    public function search() {
         return view('post/search');
     }
 }
