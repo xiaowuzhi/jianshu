@@ -24,9 +24,8 @@ class UserController extends Controller {
             'name' => 'required|min:3',
             'password' => 'required',
         ]);
-
         $name = request('name');
-        $password = bcrypt((request('password')));
+        $password = bcrypt(request('password'));
         $vva = AdminUser::create(compact('name', 'password'));
         return redirect("admin/users");
     }

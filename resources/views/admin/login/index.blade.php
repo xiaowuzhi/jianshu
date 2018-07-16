@@ -43,6 +43,8 @@
                 <input name="password" type="password" class="form-control" placeholder="密码">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
+            @include("admin.layout.error")
+
             <div class="form-group">
                 <!-- /.col -->
                     <button type="submit" class="btn btn-primary btn-block btn-flat">登陆</button>

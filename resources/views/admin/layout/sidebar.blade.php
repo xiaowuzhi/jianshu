@@ -38,7 +38,7 @@
                 </li>
             @endcan
             @can('topic')
-                <li class="treeview">
+                <li>
                     <a href="/admin/topics">
                         <i class="fa fa-dashboard"></i> <span>专题管理</span>
                     </a>
