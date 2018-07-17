@@ -16,12 +16,12 @@ class PostController extends Controller {
         $app = app();
         $log = $app->make('log');
         $log->info('post_index', ['this is log']);
-        $posts = Post::with(['comments', 'user'])
-            ->withCount(["comments", 'zans'])
-            //$posts = Post::withCount(["comments", 'zans'])
+//        $posts = Post::with(['comments', 'user'])
+//            ->withCount(["comments", 'zans'])
+        $posts = Post::withCount(["comments", 'zans'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        //$posts->load(['comments', 'user']);
+        $posts->load(['comments', 'user']);
 
         return view("post/index", compact('posts'));
     }
@@ -146,9 +146,23 @@ class PostController extends Controller {
         return back();
     }
 
-    //搜索结果页
-    public function search() {
-        return view('post/search');
+//    //搜索结果页
+//    public function search() {
+//        return view('post/search');
+//    }
+
+    /*
+     * 搜索页面
+     */
+    public function search()
+    {
+        $this->validate(request(),[
+            'query' => 'required'
+        ]);
+
+        $query = request('query');
+        $posts = Post::search(request('query'))->paginate(10);
+        return view('post/search', compact('posts', 'query'));
     }
 }
 

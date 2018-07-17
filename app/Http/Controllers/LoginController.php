@@ -51,6 +51,10 @@ class LoginController extends Controller {
         return redirect('/login');
 
     }
+
+    public function welcome(){
+        return redirect('/posts');
+    }
 }
 
 

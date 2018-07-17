@@ -39,7 +39,7 @@
                     <h2 class="blog-post-title"><a href="/posts/{{$post->id}}">{{$post->title}}</a></h2>
                     <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}} <a href="/user/<?php echo $post->user->id ?? 0; ?>"><?php echo $post->user->name ?? 'xxx'; ?></a></p>
 
-                    <p >{!!  str_limit(strip_tags($post->content), 100, '...') !!}</p>
+                    <p >{!!  str_limit(strip_tags($post->content), 200, '...') !!}</p>
                     <p class="blog-post-meta">赞 {{$post->zans_count}} | 评论 {{$post->comments_count}}</p>
                 </div>
             @endforeach

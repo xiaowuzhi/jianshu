@@ -12,7 +12,7 @@
             <p>
                 <strong><a href="/">简书网站</a></strong> 基于 Laravel5.4 构建
             </p>
-            <div class="bdsharebuttonbox bdshare-button-style0-24" data-bd-bind="1494580268777"><a href="#"
+            {{--<div class="bdsharebuttonbox bdshare-button-style0-24" data-bd-bind="1494580268777"><a href="#"
                                                                                                    class="bds_more"
                                                                                                    data-cmd="more"></a><a
                         href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#"
@@ -28,8 +28,8 @@
                                                                                        class="bds_bdhome"
                                                                                        data-cmd="bdhome"
                                                                                        title="分享到百度新首页"></a>
-            </div>
-            <script>window._bd_share_config = {
+            </div>--}}
+{{--            <script>window._bd_share_config = {
                     "common": {
                         "bdSnsKey": {"tsina": "120473611"},
                         "bdText": "",
@@ -50,7 +50,7 @@
                         "bdSelectMiniList": ["tsina", "renren", "douban", "weixin", "qzone", "tqq", "bdhome"]
                     }
                 };
-                with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>--}}
         </div>
     </aside>
     <aside id="widget-categories" class="widget panel panel-default">
@@ -61,7 +61,7 @@
         <ul class="category-root list-group">
             @foreach($topics as $topic)
             <li class="list-group-item">
-                <a href="/topic/{{$topic->id}}">{{$topic->name}}</a>
+                <a href="/topic/{{$topic->id}}">{{$topic->name}} ({{$topic->post_topics_count}})</a>
             </li>
             @endforeach
         </ul>
