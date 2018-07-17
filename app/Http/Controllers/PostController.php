@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\Comment;
+use Illuminate\Support\Facades\Validator;
+use App\Zan;
+
+//use Illuminate\Contracts\Validation\Validator;
 
 class PostController extends Controller {
     //列表页面
@@ -11,15 +16,22 @@ class PostController extends Controller {
         $app = app();
         $log = $app->make('log');
         $log->info('post_index', ['this is log']);
+//        $posts = Post::with(['comments', 'user'])
+//            ->withCount(["comments", 'zans'])
+        $posts = Post::withCount(["comments", 'zans'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        $posts->load(['comments', 'user']);
 
-
-        $posts = Post::orderBy('created_at', 'desc')->paginate(10);
-        //dd($posts);
         return view("post/index", compact('posts'));
     }
 
     //详情页
     public function show(Post $post) {
+        $post->load('comments');
+        $post->comments->load('user');
+        //dd($post->comments);
+        //dd($post);
         return view("post/show", compact('post'));
     }
 
@@ -45,7 +57,9 @@ class PostController extends Controller {
             //'title.min' => '文章标题过短'
         ]);
         //逻辑
-        $params = request(['title', 'content']);
+        $user_id = \Auth::id();
+        $params = array_merge(request(['title', 'content']), compact('user_id'));
+        //$params = request(['title', 'content']);
         $post = Post::create($params);
 
         //渲染
@@ -61,10 +75,12 @@ class PostController extends Controller {
     //编辑逻辑
     public function update(Post $post) {
         //验证
-        $this->validate(request(),[
+        $this->validate(request(), [
             'title' => 'required|string|max:100|min:5',
             'content' => 'required|string|min:10',
         ]);
+        $this->authorize('update', $post);
+
         //逻辑
         $post->title = request('title');
         $post->content = request('content');
@@ -75,6 +91,7 @@ class PostController extends Controller {
 
     //删除逻辑
     public function delete(Post $post) {
+        $this->authorize('delete', $post);
         $post->delete();
         return redirect('/posts');
 
@@ -82,12 +99,91 @@ class PostController extends Controller {
 
     //上传图片
     public function imageUpload(Request $request) {
-
         //print_r(request()->all());exit;
         //dd(request()->all());
         $path = $request->file('vvawangEditorH5File')->storePublicly(md5(time()));
-
         $vva_class = (object)['errno' => 0, 'data' => [asset('storage/' . $path)]];
         return json_encode($vva_class);
     }
+
+    //提交评论
+    public function comment() {
+        $post = Post::find(request('post_id') ?? 0);
+        //验证
+        $vva = Validator::make(request()->all(), [
+            'content' => 'required|min:3',
+        ]);
+
+        //dd($vva->errors()->all());
+        if ($vva->fails()) {
+            return \Redirect::back()
+                ->withErrors($vva)
+                ->withInput();
+        }
+        //dd($post->comments());
+        //逻辑
+        $comment = new Comment();
+        $comment->user_id = \Auth::id();
+        $comment->content = request('content');
+        $post->comments()->save($comment);
+        //渲染
+        return back();
+    }
+
+    //赞
+    public function zan(Post $post) {
+        $param = [
+            'user_id' => \Auth::id(),
+            'post_id' => $post->id,
+        ];
+        Zan::firstOrCreate($param);
+        return back();
+    }
+
+    //取消赞
+    public function unzan(Post $post) {
+        $post->zan(\Auth::id())->delete();
+        return back();
+    }
+
+//    //搜索结果页
+//    public function search() {
+//        return view('post/search');
+//    }
+
+    /*
+     * 搜索页面
+     */
+    public function search()
+    {
+        $this->validate(request(),[
+            'query' => 'required'
+        ]);
+
+        $query = request('query');
+        $posts = Post::search(request('query'))->paginate(10);
+        return view('post/search', compact('posts', 'query'));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

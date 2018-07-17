@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="col-sm-8 blog-main">
-        <div>
+        <div class="blog-post">
             <div id="carousel-example" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
@@ -31,22 +31,25 @@
                     <span class="glyphicon glyphicon-chevron-right"></span></a>
             </div>
         </div>
-        <div style="height: 20px;">
-        </div>
-        <div>
-            @foreach($posts as $post)
-            <div class="blog-post">
-                <h2 class="blog-post-title"><a href="/posts/{{$post->id}}">{{$post->title}}</a></h2>
-                <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}} <a href="/user/5">Kassandra Ankunding2</a></p>
 
-                {!! str_limit($post->content, 1000, '...') !!}
-                <p class="blog-post-meta">赞 0 | 评论 0</p>
-            </div>
+
+        <div class="blog-post">
+            @foreach($posts as $post)
+                <div >
+                    <h2 class="blog-post-title"><a href="/posts/{{$post->id}}">{{$post->title}}</a></h2>
+                    <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}} <a href="/user/<?php echo $post->user->id ?? 0; ?>"><?php echo $post->user->name ?? 'xxx'; ?></a></p>
+
+                    <p >{!!  str_limit(strip_tags($post->content), 200, '...') !!}</p>
+                    <p class="blog-post-meta">赞 {{$post->zans_count}} | 评论 {{$post->comments_count}}</p>
+                </div>
             @endforeach
 
             {{$posts->links()}}
 
         </div><!-- /.blog-main -->
+
     </div>
+
+
 @endsection
 
